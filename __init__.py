@@ -1,12 +1,18 @@
-import new_game, find_squares, Square.Square
+import game, cv
+from Square import Square
+import json
 
-def function start_game(orig, sobel):
-    squares = find_squares.find_everything(orig, sobel)
-    info = new_game(squares)
+def start_game(orig, sobel):
+    squares = cv.find_everything(orig, sobel)
+    info = game.initialize_game(squares)
+    fen = info['fen']
+    output = {fen: fen, game_state: info}
+    return json.encode(output)
+
     #GET FEN STRING SOMEHOW
 
     
 
-def function process_input(img1, img2, board_state):
-    squares = find_squares.find_everything(orig, sobal, board_state)
+def process_input(img1, img2, board_state):
+    squares = cv.find_everything(orig, sobal, board_state)
     

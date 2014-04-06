@@ -30,11 +30,21 @@ class Square():
 
 	@property
 	def color_average(self):
-		self.
-		return (self.color_img[:,:,0].mean(), 
-			 	self.color_img[:,:,1].mean(), 
-				self.color_img[:,:,2].mean())
+		self.color_average = \
+				(self.color_img[:,:,0].mean(), 
+			 	 self.color_img[:,:,1].mean(), 
+				 self.color_img[:,:,2].mean())
+		return self.color_average
+
+	@property
+	def sobel_average(self):
+		self.sobel_average = \
+				(self.sobel_img[:,:,0].mean(), 
+			 	 self.sobel_img[:,:,1].mean(), 
+				 self.sobel_img[:,:,2].mean())
+		return self.sobel_average
 
 
 if __name__ == '__main__':
-	s = Square(cv2.imread('test.jpg'), cv2.imread('test.jpg'), 1, 2)
+	s = Square( cv2.imread('img/chessboard.jpg'), 
+				cv2.imread('img/chessboard.jpg'), 1, 2)

@@ -3,6 +3,29 @@ import numpy as np
 from new_game import initialize_game
 from Square import Square
 
+def crop_img(orig_img, sobel_img):
+    #Make it grayscale
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    #Compute thresholds, don't need to use adaptive cause it's black and white
+    ret,thresh = cv2.threshold(gray,127,255,0)
+    #Calculate contours from thresh, no idea what ret is even for.
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    #Search for the biggest contour
+    biggest = None
+    max_area = 0
+    for i in contours:
+        area = cv2.contourArea(i)
+        if area > 100:
+            peri = cv2.arcLength(i,True)
+            approx = cv2.approxPolyDP(i,0.02*peri,True)
+            if area > max_area and len(approx)==4:
+                biggest = approx
+                max_area = area
+    
+    
+
+
 # only use horizontal/vertical lines
 def valid_line(theta):
     DIFFERENCE = np.pi/70
@@ -119,10 +142,13 @@ def find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img):
 
 if __name__ == '__main__':
     orig_img = cv2.imread('img/chessboard.jpg')
-    sobel_img = cv2.imread('img/sobelcropped.png')
+    sobel_img = cv2.imread('img/phone2.jpg')
     horizontal_lines, vertical_lines = hough_lines(sobel_img)
 
+    crop_img(orig_img)
     # more lines than necessary, so merge
+    print(len(vertical_lines))
+    print(len(horizontal_lines))
     if (len(vertical_lines) * len(horizontal_lines) > 49):
         merge_lines(vertical_lines)
         merge_lines(horizontal_lines)

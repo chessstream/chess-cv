@@ -92,7 +92,7 @@ def find_intersection(line1, line2, sobel_img):
 def find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img):
     hori_ind = 1
     vert_ind = 1
-    squares = np.zeros(shape=(8,8))
+    squares = np.empty(shape=(8,8), dtype=object)
 
     while hori_ind < len(horizontal_lines):
         top_line = horizontal_lines[hori_ind - 1]
@@ -108,7 +108,6 @@ def find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img):
         orig_square = orig_img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
         sobel_square = sobel_img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
         squares[hori_ind - 1][vert_ind - 1] = Square(sobel_square, orig_img, hori_ind - 1, vert_ind - 1)
-        cv2.imwrite('square.jpg', square_img)
 
         vert_ind += 1
         if vert_ind == len(vertical_lines):
@@ -116,7 +115,6 @@ def find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img):
             hori_ind += 1
 
     initialize_game(squares)
-    print(squares)
     return squares
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ class Board(object):
 	THRESHOLD = 0.01
 
 	def __init__(self, squares):
-		""" squares -- a numpy array (8x8) of Square objects """
+		"""squares -- a numpy array (8x8) of Square objects """
 		self.info = {}
 
 		top = [squares[0][i] for i in range(2, 6)]
@@ -33,6 +33,14 @@ class Board(object):
 				self.info['b_b'] = squares[0][6].color_average
 				self.info['x_w'] = squares[0][3].color_average
 				self.info['x_b'] = squares[0][4].color_average
+				self.info['board'] =  [ 'RP____pr' ,
+										'NP____pn' ,
+										'BP____pb' ,
+										'QP____pq' ,
+										'KP____pk' ,
+										'BP____pb' ,
+										'NP____pn' ,
+										'RP____pr' ]
 			else:
 				# White is on the right
 				# Even locations are white
@@ -44,6 +52,14 @@ class Board(object):
 				self.info['b_b'] = squares[0][0].color_average
 				self.info['x_w'] = squares[0][3].color_average
 				self.info['x_b'] = squares[0][4].color_average
+				self.info['board'] =  [ 'rp____PR' ,
+										'np____PN' ,
+										'bp____PB' ,
+										'kp____PK' ,
+										'qp____PQ' ,
+										'bp____PB' ,
+										'np____PN' ,
+										'rp____PR' ]
 		else:
 			if top_avg > bottom_avg:
 				# White is on the top 
@@ -56,6 +72,14 @@ class Board(object):
 				self.info['b_b'] = squares[7][0].color_average
 				self.info['x_w'] = squares[4][0].color_average
 				self.info['x_b'] = squares[3][0].color_average
+				self.info['board'] =  [ 'RNBKQBNR' ,
+										'PPPPPPPP' ,
+										'________' ,
+										'________' ,
+										'________' ,
+										'________' ,
+										'pppppppp' ,
+										'rnbkqbnr' ]
 			else:
 				# White is on the bottom
 				# Odd locations are white
@@ -67,6 +91,8 @@ class Board(object):
 				self.info['b_b'] = squares[1][0].color_average
 				self.info['x_w'] = squares[4][0].color_average
 				self.info['x_b'] = squares[3][0].color_average
+		self.info['fen'] = \
+			'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 
 class Location(object):

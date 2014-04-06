@@ -3,13 +3,17 @@ import cv2;
 class Square():
 	SOBEL_MIN = 10;
 
-	def __init__(self, sobel_img, color_img, x, y, boardinfo):
+	def __init__(self, sobel_img, color_img, x, y, boardinfo=None):
 		self.boardinfo = boardinfo
 		self.sobel_img = sobel_img
 		self.color_img = color_img
 		self.x = x
 		self.y = y
-		self.square_color = self.boardinfo['color'][(self.x + self.y) % 2];
+		
+	@property
+	def square_color(self):
+		self.square_color = self.boardinfo['color'][(self.x + self.y) % 2]
+		return self.square_color
 
 	@property
 	def has_piece(self):
@@ -40,9 +44,9 @@ class Square():
 	@property
 	def color_average(self):
 		self.color_average = \
-				(self.color_img[:,:,0].mean(), 
-			 	 self.color_img[:,:,1].mean(), 
-				 self.color_img[:,:,2].mean())
+				(self.color_img[:, :, 0].mean(), 
+			 	 self.color_img[:, :, 1].mean(), 
+				 self.color_img[:, :, 2].mean())
 		return self.color_average
 
 	@property

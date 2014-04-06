@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+from new_game import initialize_game
+from Square import Square
 
 # only use horizontal/vertical lines
 def valid_line(theta):
@@ -61,7 +63,7 @@ def sort_lines(lines, orientation):
     return sorted(lines, key=lambda line: (line['p1'][ind] + line['p1'][ind])/2)
 
 
-def find_intersection(line1, line2, img):
+def find_intersection(line1, line2, sobel_img):
     # diff in x-coordinates for both lines
     diffx1 = line1['p1'][0] - line1['p2'][0]
     diffx2 = line2['p1'][0] - line2['p2'][0]
@@ -83,13 +85,15 @@ def find_intersection(line1, line2, img):
     # TODO: parallel lines
 
     y = m1 * x + b1
-    cv2.circle(img, (x, y), 3, (255, 0, 0), 2)
+    cv2.circle(sobel_img, (x, y), 3, (255, 0, 0), 2)
     return (x,y)
 
 
-def find_squares(horizontal_lines, vertical_lines, img):
+def find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img):
     hori_ind = 1
     vert_ind = 1
+    squares = np.zeros(shape=(8,8))
+
     while hori_ind < len(horizontal_lines):
         top_line = horizontal_lines[hori_ind - 1]
         bottom_line = horizontal_lines[hori_ind]
@@ -97,19 +101,28 @@ def find_squares(horizontal_lines, vertical_lines, img):
         right_line = vertical_lines[vert_ind]
 
         # corners of square
-        top_left = find_intersection(top_line, left_line, img)
-        bottom_right = find_intersection(bottom_line, right_line, img)
-        square = img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
-        cv2.imwrite('square.jpg', square)
+        top_left = find_intersection(top_line, left_line, sobel_img)
+        bottom_right = find_intersection(bottom_line, right_line, sobel_img)
+
+        # crop squares
+        orig_square = orig_img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
+        sobel_square = sobel_img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
+        squares[hori_ind - 1][vert_ind - 1] = Square(sobel_square, orig_img, hori_ind - 1, vert_ind - 1)
+        cv2.imwrite('square.jpg', square_img)
 
         vert_ind += 1
         if vert_ind == len(vertical_lines):
             vert_ind = 1
             hori_ind += 1
 
+    initialize_game(squares)
+    print(squares)
+    return squares
+
 if __name__ == '__main__':
-    img = cv2.imread('img/sobelcropped.png')
-    horizontal_lines, vertical_lines = hough_lines(img)
+    orig_img = cv2.imread('img/chessboard.jpg')
+    sobel_img = cv2.imread('img/sobelcropped.png')
+    horizontal_lines, vertical_lines = hough_lines(sobel_img)
 
     # more lines than necessary, so merge
     if (len(vertical_lines) * len(horizontal_lines) > 49):
@@ -117,15 +130,13 @@ if __name__ == '__main__':
         merge_lines(horizontal_lines)
     vertical_lines = sort_lines(vertical_lines, 'vertical')
     horizontal_lines = sort_lines(horizontal_lines, 'horizontal')
-    print(len(horizontal_lines), len(vertical_lines))
 
-    # display lines
+    # add edges to sobel_img
     for vert_line in vertical_lines:
-        cv2.line(img,vert_line['p1'],vert_line['p2'],(0,0,255),2)
-
+        cv2.line(sobel_img,vert_line['p1'],vert_line['p2'],(0,0,255),2)
     for hori_line in horizontal_lines:
-        cv2.line(img,hori_line['p1'],hori_line['p2'],(0,0,255),2)
+        cv2.line(sobel_img,hori_line['p1'],hori_line['p2'],(0,0,255),2)
 
-    find_squares(horizontal_lines, vertical_lines, img)
+    find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img)
 
-    cv2.imwrite('houghlines3.jpg',img)
+    cv2.imwrite('houghlines3.jpg',sobel_img)

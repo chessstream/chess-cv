@@ -156,7 +156,7 @@ def find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img):
         # crop squares
         orig_square = orig_img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
         sobel_square = sobel_img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
-        squares[hori_ind - 1][vert_ind - 1] = Square(sobel_square, orig_img, hori_ind - 1, vert_ind - 1)
+        squares[hori_ind - 1][vert_ind - 1] = Square(sobel_square, orig_img, hori_ind - 1, vert_ind - 1, board_state)
 
         vert_ind += 1
         if vert_ind == len(vertical_lines):
@@ -166,9 +166,9 @@ def find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img):
     initialize_game(squares)
     return squares
 
-if __name__ == '__main__':
-    orig_img_in = cv2.imread('img/chessboard.jpg')
-    sobel_img_in = cv2.imread('img/phone2.jpg')
+def find_everything(orig_img_in, sobel_img_in, board_state=None):
+    #orig_img_in = cv2.imread('img/chessboard.jpg')
+    #sobel_img_in = cv2.imread('img/phone2.jpg')
     orig_img, sobel_img = crop_img(orig_img_in, sobel_img_in)
     horizontal_lines, vertical_lines = hough_lines(sobel_img)
 
@@ -189,6 +189,6 @@ if __name__ == '__main__':
     for hori_line in horizontal_lines:
         cv2.line(sobel_img,hori_line['p1'],hori_line['p2'],(0,0,255),2)
 
-    find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img)
+    return find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img, board_state)
 
     cv2.imwrite('houghlines3.jpg',sobel_img)

@@ -5,7 +5,7 @@ from Square import Square
 
 def crop_img(orig_img, sobel_img):
     #Make it grayscale
-    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(sobel_img,cv2.COLOR_BGR2GRAY)
     #Compute thresholds, don't need to use adaptive cause it's black and white
     ret,thresh = cv2.threshold(gray,127,255,0)
     #Calculate contours from thresh, no idea what ret is even for.
@@ -22,8 +22,34 @@ def crop_img(orig_img, sobel_img):
             if area > max_area and len(approx)==4:
                 biggest = approx
                 max_area = area
+
+    print biggest
+    x_max = 0;
+    x_min = 100000;
+    y_max = 0
+    y_min = 100000;
+    for d in biggest:
+       x = d[0][0] 
+       y = d[0][1]
+       if x > x_max:
+           x_max = x
+       if x < x_min:
+           x_min = x
+       if y > y_max:
+           y_max = y
+       if y < y_min:
+           y_min = y
     
-    
+    x_start = x_min + 10
+    x_end = x_max - 10
+    y_start = y_min + 10
+    y_end = y_max + 10
+    new_original = orig_img[y_start:y_end, x_start:x_end]
+    new_sobel = sobel_img[y_start:y_end, x_start:x_end]
+    return new_original, new_sobel
+
+
+
 
 
 # only use horizontal/vertical lines
@@ -141,14 +167,16 @@ def find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img):
     return squares
 
 if __name__ == '__main__':
-    orig_img = cv2.imread('img/chessboard.jpg')
-    sobel_img = cv2.imread('img/phone2.jpg')
+    orig_img_in = cv2.imread('img/chessboard.jpg')
+    sobel_img_in = cv2.imread('img/phone2.jpg')
+    orig_img, sobel_img = crop_img(orig_img_in, sobel_img_in)
     horizontal_lines, vertical_lines = hough_lines(sobel_img)
 
-    crop_img(orig_img)
+    cv2.imwrite('houghlines3.jpg',sobel_img)
     # more lines than necessary, so merge
     print(len(vertical_lines))
     print(len(horizontal_lines))
+    
     if (len(vertical_lines) * len(horizontal_lines) > 49):
         merge_lines(vertical_lines)
         merge_lines(horizontal_lines)

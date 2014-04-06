@@ -13,6 +13,6 @@ def start_game(orig, sobel):
 
     
 
-def process_input(img1, img2, board_state):
+def process_input(orig, sobel, board_state):
     squares = cv.find_everything(orig, sobal, board_state)
     

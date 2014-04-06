@@ -68,5 +68,5 @@ for vert_line in vertical_lines:
 for hori_line in horizontal_lines:
     cv2.line(img,hori_line['p1'],hori_line['p2'],(0,0,255),2)
 
-def findIntersection(line1, line2):
+def find_intersection(line1, line2):
     pass

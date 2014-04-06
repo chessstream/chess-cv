@@ -18,7 +18,23 @@ def char_to_location(c, x, y):
 	return Location(x, y, c, color)
 
 def compare_square_array_to_location_array(squares, locations):
-	pass
+	disappeared, appeared = None, None
+	for row in range(len(locations)):
+		for col in range(len(locations[row])):
+			if locations[row][col].piece and not squares[row][col].has_piece:
+				disappeared = (col, row)
+			elif squares[row][col].has_piece and not locations[row][col].piece:
+				appeared = (col, row)
+
+	return disappeared, appeared
+
+def update_location_array(locations, squares, disappeared, appeared):
+	if not appeared:
+		# A piece was taken
+		pass
+	else:
+		# Generic move
+		pass
 
 def location_array_to_fen(locations):
 	pass

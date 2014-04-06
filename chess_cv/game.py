@@ -91,6 +91,14 @@ class Board(object):
 				self.info['b_b'] = squares[1][0].color_average
 				self.info['x_w'] = squares[4][0].color_average
 				self.info['x_b'] = squares[3][0].color_average
+				self.info['board'] =  [ 'rnbqkbnr' ,
+										'pppppppp' ,
+										'________' ,
+										'________' ,
+										'________' ,
+										'________' ,
+										'PPPPPPPP' ,
+										'RNBQKBNR' ]
 		self.info['fen'] = \
 			'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 

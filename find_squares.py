@@ -80,9 +80,31 @@ def find_intersection(line1, line2, img):
     else:
         x = ((b2-b1) / (m1-m2))
 
+    # TODO: parallel lines
+
     y = m1 * x + b1
     cv2.circle(img, (x, y), 3, (255, 0, 0), 2)
     return (x,y)
+
+
+def find_squares(horizontal_lines, vertical_lines, img):
+    hori_ind = 1
+    vert_ind = 1
+    while hori_ind < len(horizontal_lines):
+        top_line = horizontal_lines[hori_ind - 1]
+        bottom_line = horizontal_lines[hori_ind]
+        left_line = vertical_lines[vert_ind - 1]
+        right_line = vertical_lines[vert_ind]
+
+        find_intersection(top_line, left_line, img)
+        find_intersection(top_line, right_line, img)
+        find_intersection(bottom_line, left_line, img)
+        find_intersection(bottom_line, right_line, img)
+
+        vert_ind += 1
+        if vert_ind == len(vertical_lines):
+            vert_ind = 1
+            hori_ind += 1
 
 if __name__ == '__main__':
     img = cv2.imread('img/sobelcropped.png')
@@ -103,8 +125,6 @@ if __name__ == '__main__':
     for hori_line in horizontal_lines:
         cv2.line(img,hori_line['p1'],hori_line['p2'],(0,0,255),2)
 
-    for hori_line in horizontal_lines:
-        for vert_line in vertical_lines:
-            print(find_intersection(hori_line, vert_line, img))
+    find_squares(horizontal_lines, vertical_lines, img)
 
     cv2.imwrite('houghlines3.jpg',img)

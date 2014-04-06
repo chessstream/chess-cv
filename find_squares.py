@@ -96,10 +96,11 @@ def find_squares(horizontal_lines, vertical_lines, img):
         left_line = vertical_lines[vert_ind - 1]
         right_line = vertical_lines[vert_ind]
 
-        find_intersection(top_line, left_line, img)
-        find_intersection(top_line, right_line, img)
-        find_intersection(bottom_line, left_line, img)
-        find_intersection(bottom_line, right_line, img)
+        # corners of square
+        top_left = find_intersection(top_line, left_line, img)
+        bottom_right = find_intersection(bottom_line, right_line, img)
+        square = img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
+        cv2.imwrite('square.jpg', square)
 
         vert_ind += 1
         if vert_ind == len(vertical_lines):

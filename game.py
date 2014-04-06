@@ -96,9 +96,9 @@ class Board(object):
 
 
 class Location(object):
-	def __init__(self, x, y, has_piece=False, color=None):
+	def __init__(self, x, y, piece=None, color=None):
 		(self.x, self.y) = (x, y)
-		self.has_piece = has_piece
+		self.piece = piece
 		self.color = color
 
 	@property
@@ -106,8 +106,8 @@ class Location(object):
 		return (self.x, self.y)
 
 	def __repr__(self):
-		return str(self.point) + ": " + str(self.has_piece) \
-			+ (", " + str(self.color) if self.has_piece else "")
+		return str(self.point) + ": " + str(self.piece) \
+			+ (", " + str(self.color) if self.piece else "")
 
 
 def initialize_game(squares):

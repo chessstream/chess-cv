@@ -166,13 +166,13 @@ def find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img):
     initialize_game(squares)
     return squares
 
-def find_everything(orig_img_in, sobel_img_in, board_state=None):
-    #orig_img_in = cv2.imread('img/chessboard.jpg')
-    #sobel_img_in = cv2.imread('img/phone2.jpg')
+def find_everything(orig_img_path, sobel_img_path, board_state=None):
+    orig_img_in = cv2.imread(orig_img_path)
+    sobel_img_in = cv2.imread(sobel_img_path)
     orig_img, sobel_img = crop_img(orig_img_in, sobel_img_in)
     horizontal_lines, vertical_lines = hough_lines(sobel_img)
 
-    cv2.imwrite('houghlines3.jpg',sobel_img)
+    cv2.imwrite('recentoutput.jpg',sobel_img)
     # more lines than necessary, so merge
     print(len(vertical_lines))
     print(len(horizontal_lines))
@@ -191,4 +191,3 @@ def find_everything(orig_img_in, sobel_img_in, board_state=None):
 
     return find_squares(horizontal_lines, vertical_lines, orig_img, sobel_img, board_state)
 
-    cv2.imwrite('houghlines3.jpg',sobel_img)
